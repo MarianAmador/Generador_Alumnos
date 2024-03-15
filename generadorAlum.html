@@ -204,62 +204,67 @@ for (let i = 1; i < numeroVentas; i++) {
 
 document.getElementById("salida").innerHTML = salida;
 }
-function generarJSON() {
-    const numAlumnos = document.getElementById("NumRegistros").value;
-    const data = generarData(numAlumnos);
-    document.getElementById("salida").innerText = JSON.stringify(data, null, 2);
-}
+function generar() {
+            const numeroAlumnos = document.getElementById("NumRegistros").value;
+            let salida = "CREATE DATABASE IF NOT EXISTS Universidad;<br> USE Universidad;<br> CREATE TABLE IF NOT EXISTS alumnos (<br>  alumno_matricula INT(11) UNSIGNED NOT NULL UNIQUE,<br>  alumno_apellido1 VARCHAR(255) NOT NULL,<br>  alumno_apellido2 VARCHAR(255),<br>  alumno_nombres VARCHAR(255) NOT NULL,<br>  alumno_correo VARCHAR(255) NOT NULL UNIQUE<br>);<br> INSERT INTO alumnos (alumno_matricula, alumno_ap1, alumno_ap2, alumno_nombres, alumno_correo) VALUES <br>";
+            let matricula = 222200000;
 
-function descargarCSV() {
-        let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "Apellido1, Apellido2, Nombre1\n";
-        for (let i = 0; i < apellido1.length; i++) {
-            csvContent += `${apellido1[i]},${apellido2[i]},${nombre1[i]}\n`;
+            for (let i = 0; i < numeroAlumnos; i++) {
+                salida += `(${matricula}, '${apellido1[Math.floor(Math.random() * apellido1.length)]}', '${apellido2[Math.floor(Math.random() * apellido2.length)]}', '${nombre1[Math.floor(Math.random() * nombre1.length)]} ${nombre2[Math.floor(Math.random() * nombre2.length)]}', '${matricula++}@unison.mx')`;
+                if (i !== numeroAlumnos - 1) {
+                    salida += ",<br>";
+                } else {
+                    salida += ";<br>";
+                }
+            }
+
+            document.getElementById("salida").innerHTML = salida;
         }
-        let encodedUri = encodeURI(csvContent);
-        let link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "datos.csv");
-        document.body.appendChild(link);
-        link.click();
-    }
 
-    function descargarJSON() {
-        let jsonData = [];
-        for (let i = 0; i < apellido1.length; i++) {
-            let item = {
-                Apellido1: apellido1[i],
-                Apellido2: apellido2[i],
-                Nombre1: nombre1[i]
-            };
-            jsonData.push(item);
+        function descargarCSV() {
+            let csvContent = "Apellido1, Apellido2, Nombre1\n";
+            for (let i = 0; i < apellido1.length; i++) {
+                csvContent += `${apellido1[i]},${apellido2[i]},${nombre1[i]} ${nombre2[i]}\n`;
+            }
+            let encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "alumnos.csv");
+            document.body.appendChild(link);
+            link.click();
         }
-        let jsonContent = JSON.stringify(jsonData, null, 2);
-      
-        let encodedUri = encodeURI("data:text/json;charset=utf-8," + jsonContent);
-        let link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "datos.json");
-        document.body.appendChild(link);
-        link.click();
-    }
 
-function descargarSQL() {
-var contenidoSQL = document.getElementById("salida").innerText;
-var blob = new Blob([contenidoSQL], { type: "text/plain" });
-var url = window.URL.createObjectURL(blob);
-var a = document.createElement("a");
-a.href = url;
-a.download = "alumnos.JSON";
-document.body.appendChild(a);
-a.click();
-document.body.removeChild(a);
-window.URL.revokeObjectURL(url);
-}
+        function descargarJSON() {
+            let jsonData = [];
+            for (let i = 0; i < apellido1.length; i++) {
+                let item = {
+                    Apellido1: apellido1[i],
+                    Apellido2: apellido2[i],
+                    Nombre1: nombre1[i] + ' ' + nombre2[i]
+                };
+                jsonData.push(item);
+            }
+            let jsonContent = JSON.stringify(jsonData, null, 2);
+            let encodedUri = encodeURI("data:text/json;charset=utf-8," + jsonContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "alumnos.json");
+            document.body.appendChild(link);
+            link.click();
+        }
 
-
-
-
+        function descargarSQL() {
+            var contenidoSQL = document.getElementById("salida").innerText;
+            var blob = new Blob([contenidoSQL], { type: "text/plain" });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "alumnos.sql";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
 </script>
 </head>
 
